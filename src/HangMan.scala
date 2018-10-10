@@ -1,6 +1,8 @@
-import scala.collection.immutable
 import scala.io.{Source, StdIn}
 
+/**
+  * @author Bryan de Ridder, Jarne Van Aerde
+  */
 object HangMan {
 
   // Main method
