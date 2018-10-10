@@ -1,3 +1,4 @@
+import scala.collection.immutable
 import scala.io.{Source, StdIn}
 
 object HangMan {
@@ -21,7 +22,6 @@ object HangMan {
     // Tell the player how many characters there are in the word.
     val tries = word.length * 2
     val charCount = word.length
-
 
     println(s"The word has $charCount characters.")
     // 5. Start the game by calling the function 'play'.
@@ -51,13 +51,17 @@ object HangMan {
   // 3. If the current try still contains an _ , return the code to continue.
   //    If not, return the code for success.
   def testWord(word: String, target: String, input: Char): String = {
+    println(target)
     val zippedWord = zipWords(word, target, input)
     println(zippedWord)
     if (zippedWord == target) {
-      println("Nice Job!")
       System.exit(0)
     }
-    zippedWord
+    ""
+  }
+
+  def vectorToWord(charSeq: immutable.IndexedSeq[Char]): String = {
+    charSeq.toList.mkString(",").replace(",", "")
   }
 
   // The function 'zipWords'
@@ -67,15 +71,15 @@ object HangMan {
   // Use zip to merge the target with the currentTry.
   // Use recursion, head and tail. Remember that a String is a list of characters.
   def zipWords(word: String, target: String, input: Char): String = {
-    val zipped = target.zip(word)
-    println(zipped.unzip)
-    ""
-//    if (target.charAt() == input) {
-//      val newWord = input + word.tail
-//      newWord
-//    }
-//    zipWords(word.tail, target.tail, input)
+    val zipped = word.zip(target)
+    val mapped = zipped.map {
+      case (x, y) =>
+        if (y == input) input
+        else x
+    }
+    vectorToWord(mapped)
   }
+
 
   // Utility function 'readWord'
   //
