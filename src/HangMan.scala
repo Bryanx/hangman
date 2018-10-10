@@ -25,7 +25,7 @@ object HangMan {
 
     println(s"The word has $charCount characters.")
     // 5. Start the game by calling the function 'play'.
-    play(tries, word, readWord(word.length))
+    play(tries, word, template)
   }
 
   // The function 'play'.
@@ -38,8 +38,8 @@ object HangMan {
       System.exit(0)
     }
     println(s"Attempt $numberCurrentTry, give a character:")
-    val input = StdIn.readChar()
-    val newWord = testWord(word, target, input)
+    val charInput = readNewChar()
+    val newWord = testWord(word, target, charInput)
     play(numberCurrentTry - 1, target, newWord)
   }
 
@@ -49,17 +49,14 @@ object HangMan {
   // 2. Show the current solution.
   // 3. If the current try still contains an _ , return the code to continue.
   //    If not, return the code for success.
-  def testWord(word: String, target: String, input: Char): String = {
-    val zippedWord = zipWords(word, target, input)
+  def testWord(word: String, target: String, charInput: Char): String = {
+    val zippedWord = zipWords(word, target, charInput)
     println(zippedWord)
     if (zippedWord == target) {
+      println("Congratulations, you guessed the word!")
       System.exit(0)
     }
     zippedWord
-  }
-
-  def vectorToWord(charSeq: immutable.IndexedSeq[Char]): String = {
-    charSeq.toList.mkString(",").replace(",", "")
   }
 
   // The function 'zipWords'
@@ -68,22 +65,30 @@ object HangMan {
   //
   // Use zip to merge the target with the currentTry.
   // Use recursion, head and tail. Remember that a String is a list of characters.
-  def zipWords(word: String, target: String, input: Char): String = {
+  def zipWords(word: String, target: String, charInput: Char): String = {
     val zipped = word.zip(target)
     val mapped = zipped.map {
-      case (x, y) =>
-        if (y == input) input
-        else x
+      case (wordChar, targetChar) =>
+        if (targetChar == charInput) {
+          charInput
+        } else {
+          wordChar
+        }
     }
-    vectorToWord(mapped)
+    mapped.mkString.replace(",", "")
   }
-
 
   // Utility function 'readWord'
   //
   // The input should be of the same length as the target, so check that here.
   // Only return a word if it has the same length as the target, otherwise return a message.
-  def readWord(length: Int): String = {
-    Range(0, length + 1).map(_ => "_").reduce(_ + _)
+  def readNewChar(): Char = {
+    val char = StdIn.readChar()
+    if (char < 97 || char > 122) {
+      println("Please enter a char between (a-z)")
+      readNewChar()
+    } else {
+      char
+    }
   }
 }
