@@ -40,7 +40,6 @@ object HangMan {
     println(s"Attempt $numberCurrentTry, give a character:")
     val input = StdIn.readChar()
     val newWord = testWord(word, target, input)
-    println(newWord)
     play(numberCurrentTry - 1, target, newWord)
   }
 
@@ -51,13 +50,12 @@ object HangMan {
   // 3. If the current try still contains an _ , return the code to continue.
   //    If not, return the code for success.
   def testWord(word: String, target: String, input: Char): String = {
-    println(target)
     val zippedWord = zipWords(word, target, input)
     println(zippedWord)
     if (zippedWord == target) {
       System.exit(0)
     }
-    ""
+    zippedWord
   }
 
   def vectorToWord(charSeq: immutable.IndexedSeq[Char]): String = {
